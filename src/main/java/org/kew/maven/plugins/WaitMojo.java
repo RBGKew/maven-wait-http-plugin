@@ -9,8 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -27,6 +29,12 @@ public class WaitMojo extends AbstractMojo {
 
 	@Parameter(property="file", defaultValue="/")
 	String file;
+
+	@Parameter(property="username", defaultValue="")
+	String username;
+
+	@Parameter(property="password", defaultValue="")
+	String password;
 
 	@Parameter(property="timeout", defaultValue="30000")
 	int timeout;
@@ -53,6 +61,7 @@ public class WaitMojo extends AbstractMojo {
 		getLog().info("Host: " + host);
 		getLog().info("Port: " + port);
 		getLog().info("File: " + file);
+		getLog().info("Basic auth: " + enableBasicAuthentication());
 		URL url = getURL();
 		int count = maxcount;
 		int trials = 1;
@@ -69,6 +78,14 @@ public class WaitMojo extends AbstractMojo {
 		while (true) {
 			try {
 				getLog().info(trials + ": Trying to connect to " + url);
+
+				if (enableBasicAuthentication()){
+					Authenticator.setDefault (new Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication(username, password.toCharArray());
+						}
+					});
+				}
 
 				// obtain the connection
 				URLConnection connection = url.openConnection();
@@ -133,5 +150,13 @@ public class WaitMojo extends AbstractMojo {
 			throw new MojoExecutionException(
 					protocol + ", " + host + ", " + port + ", " + file + ": cannot create URL", e);
 		}
+	}
+
+	/**
+	 * Enable basic auth headers or not
+	 * @return true if either pwd or username set
+	 */
+	private boolean enableBasicAuthentication() {
+		return !"".equals(username) || !"".equals(password);
 	}
 }
