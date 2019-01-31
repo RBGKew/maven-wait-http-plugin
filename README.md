@@ -10,7 +10,7 @@ Maven plugin that waits until a connection is available. In the case of an http 
 | host        | localhost ||
 | port        | 8080      ||
 | file        | /         | Path to fetch |
-| timeout     | 30000     | Time in ms to wait between trys |
+| timeout     | 30000     | Time in ms to wait between tries |
 | maxcount    | 0         | Maximum number of time to try connecting before failing |
 | skip        | false     ||
 | read        | false     | Read the response instead of just opening connection |
