@@ -15,6 +15,8 @@ Maven plugin that waits until a connection is available. In the case of an http 
 | skip        | false     ||
 | read        | false     | Read the response instead of just opening connection |
 | initialWait | 0         | Time in ms to wait before initial try connecting |
+| username    |           | A username used for basic authentication |
+| password    |           | The password used for basic authentication |
 
 ## Usage
 ```
@@ -39,6 +41,8 @@ Maven plugin that waits until a connection is available. In the case of an http 
             <maxcount>20</maxcount>
             <timeout>10000</timeout>
             <initialWait>10000</initialWait>
+            <username>admin</username>
+            <password>admin</password>
           </configuration>
         </execution>
       </executions>
